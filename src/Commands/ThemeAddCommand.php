@@ -89,6 +89,9 @@ class ThemeAddCommand extends Command
 				]
 			);
 
+			$this->components->success("Theme '{$name}' has been created successfully!");
+			$this->line("  Path: [" . Str::replaceFirst(base_path() . '/', '', $themePath) . "]");
+
 			return self::SUCCESS;
 
 		}
@@ -116,7 +119,7 @@ class ThemeAddCommand extends Command
 
 			collect($replacements)->each(function ($replace, $search) use (&$content)
 			{
-				$content = Str::replace("{{" . strtoupper($search) . "}}", $replace, $content);
+				$content = Str::replace("{{ $search }}", $replace, $content);
 			});
 
 			File::put($path, $content);
