@@ -35,8 +35,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Rdcstarr\\Settings\\": "src/",
-			"Rdcstarr\\Settings\\Database\\Factories\\": "database/factories/"
+			"Rdcstarr\\Themes\\": "src/"
 		},
 		"files": [
 			"src/helpers.php"
@@ -44,7 +43,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Rdcstarr\\Settings\\Tests\\": "tests/"
+			"Rdcstarr\\Themes\\Tests\\": "tests/"
 		}
 	},
 	"scripts": {
