@@ -5,9 +5,11 @@ namespace Rdcstarr\Themes;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
+use Rdcstarr\Themes\Commands\ThemeAddCommand;
+use Rdcstarr\Themes\Commands\ThemeListCommand;
+use Rdcstarr\Themes\Commands\ThemeRemoveCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Rdcstarr\Themes\Commands\ThemesCommand;
 
 class ThemesServiceProvider extends PackageServiceProvider
 {
@@ -54,6 +56,10 @@ class ThemesServiceProvider extends PackageServiceProvider
 		 * More info: https://github.com/spatie/laravel-package-tools
 		 */
 		$package->name('themes')
-			->hasCommand(ThemesCommand::class);
+			->hasCommands([
+				ThemeAddCommand::class,
+				ThemeRemoveCommand::class,
+				ThemeListCommand::class,
+			]);
 	}
 }
