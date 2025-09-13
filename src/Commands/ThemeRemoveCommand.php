@@ -53,5 +53,9 @@ class ThemeRemoveCommand extends Command
 		}
 
 		File::deleteDirectory($themePath);
+
+		$this->components->success("Theme '{$name}' has been removed successfully!");
+
+		return self::SUCCESS;
 	}
 }
