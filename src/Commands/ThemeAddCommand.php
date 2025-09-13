@@ -109,6 +109,19 @@ class ThemeAddCommand extends Command
 		}
 	}
 
+	/**
+	 * Publishes a stub file to the specified location, replacing placeholders with provided values.
+	 *
+	 * This method reads the contents of a stub file, replaces all placeholders in the format {{ key }}
+	 * with their corresponding values from the $replacements array, and writes the result to the target path.
+	 * If an error occurs during reading or writing, it logs the error and returns false.
+	 *
+	 * @param string $from         Path to the source stub file.
+	 * @param string $to           Directory where the file should be published.
+	 * @param string $name         Name of the file to create.
+	 * @param array  $replacements Key-value pairs for placeholder replacement.
+	 * @return bool                True on success, false on failure.
+	 */
 	protected function publishStub(string $from, string $to, string $name, array $replacements = []): bool
 	{
 		$path = "$to/$name";
