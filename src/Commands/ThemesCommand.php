@@ -15,6 +15,6 @@ class ThemesCommand extends Command
 
 	public function handle()
 	{
-
+		//
 	}
 }
