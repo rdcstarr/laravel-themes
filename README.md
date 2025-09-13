@@ -7,6 +7,7 @@
 
 A simple laravel package.
 
+
 ## Features
 
 ## Installation
