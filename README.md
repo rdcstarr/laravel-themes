@@ -9,12 +9,6 @@ A simple and elegant Laravel package for managing application settings with grou
 
 ## Features
 
-- 🔧 **Group-based organization** - Organize settings into logical groups
-- ⚡ **Automatic caching** - Built-in cache management for optimal performance
-- 🎯 **Multiple access methods** - Use helper function, facade, or dependency injection
-- 📦 **Batch operations** - Set multiple settings efficiently
-- 🔄 **Method chaining** - Fluent interface for better developer experience
-
 ## Installation
 
 You can install the package via composer:
