@@ -4,7 +4,7 @@ namespace Rdcstarr\Themes;
 
 use Illuminate\Filesystem\Filesystem;
 
-class Theme
+class Themes
 {
 	protected Filesystem $filesystem;
 	public string $name;
