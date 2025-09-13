@@ -11,18 +11,24 @@ use Rdcstarr\Themes\Commands\ThemesCommand;
 
 class ThemesServiceProvider extends PackageServiceProvider
 {
+	/**
+	 * Register services and bind the theme singleton in the service container.
+	 */
 	public function register(): void
 	{
 		parent::register();
 
-		$this->app->singleton('theme', fn($app) => new Themes());
+		$this->app->singleton('theme', fn($app) => new Theme());
 	}
 
+	/**
+	 * Bootstrap any application services, configure view and Blade integration, and Vite macros.
+	 */
 	public function boot(): void
 	{
 		parent::boot();
 
-		View::prependLocation(app('theme')->viewsPath());
+		View::prependLocation(theme()->viewsPath());
 		Blade::directive('themeName', fn() => "<?php echo theme()->name(); ?>");
 
 		view()->composer('*', function ()
@@ -34,6 +40,12 @@ class ThemesServiceProvider extends PackageServiceProvider
 		Vite::macro('image', fn(string $file) => $this->asset("resources/themes/" . theme()->name() . "/images/{$file}"));
 	}
 
+	/**
+	 * Configure the package using Laravel Package Tools.
+	 *
+	 * @param Package $package
+	 * @return void
+	 */
 	public function configurePackage(Package $package): void
 	{
 		/*

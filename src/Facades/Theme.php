@@ -11,6 +11,6 @@ class Theme extends Facade
 {
 	protected static function getFacadeAccessor(): string
 	{
-		return \Rdcstarr\Themes\Themes::class;
+		return \Rdcstarr\Themes\Theme::class;
 	}
 }

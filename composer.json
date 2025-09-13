@@ -1,6 +1,7 @@
 {
 	"name": "rdcstarr/laravel-themes",
 	"description": "A simple themes package for Laravel.",
+	"version": "v1.0.1",
 	"type": "library",
 	"keywords": [
 		"Rdcstarr",
