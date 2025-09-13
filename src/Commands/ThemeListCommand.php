@@ -4,6 +4,7 @@ namespace Rdcstarr\Themes\Commands;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use function Laravel\Prompts\confirm;
 
 class ThemeListCommand extends Command
@@ -39,8 +40,8 @@ class ThemeListCommand extends Command
 
 			$themes->each(function ($theme)
 			{
-				$this->line("  $theme");
-				$this->line("  Path: [" . theme()->basePath() . "/$theme]");
+				$this->line("  🎨 " . Str::ucfirst($theme));
+				$this->line("  Path: [" . Str::replaceFirst(base_path() . '/', '', theme()->basePath() . "/$theme") . "]");
 				$this->line("  <fg=gray>" . str_repeat("·", 100) . "</>");
 			});
 		}
