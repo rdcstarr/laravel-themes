@@ -14,7 +14,7 @@ class Theme
 		$this->filesystem = new Filesystem();
 	}
 
-	public function name($name): string
+	public function setCurrentTheme($name): bool
 	{
 		if (!$this->exists($name))
 		{
@@ -22,8 +22,12 @@ class Theme
 		}
 
 		$this->name = $name;
+		return true;
+	}
 
-		return $name;
+	public function name(): string
+	{
+		return $this->name;
 	}
 
 	public function basePath(): string
