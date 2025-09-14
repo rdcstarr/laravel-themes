@@ -4,6 +4,7 @@ namespace Rdcstarr\Themes;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Cache\RedisStore;
 
 class Theme
 {
