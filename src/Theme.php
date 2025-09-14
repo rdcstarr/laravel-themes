@@ -3,6 +3,7 @@
 namespace Rdcstarr\Themes;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 
 class Theme
 {
@@ -124,7 +125,25 @@ class Theme
 	 */
 	public function exists(string $name): bool
 	{
-		return File::exists(resource_path("themes/{$name}"));
+		$path = resource_path("themes/{$name}");
+
+		// Use Redis cache only if Redis is the cache driver
+		if (app()->environment('production') && !app()->runningInConsole() && Cache::getStore() instanceof RedisStore)
+		{
+			static $memo = [];
+
+			if (isset($memo[$name]))
+			{
+				return $memo[$name];
+			}
+
+			$cacheKey = "theme:exists:{$name}";
+
+			return $memo[$name] ??= Cache::remember($cacheKey, 30, fn() => File::isDirectory($path));
+		}
+
+		// Fallback to direct file check
+		return File::isDirectory($path);
 	}
 
 	/**
