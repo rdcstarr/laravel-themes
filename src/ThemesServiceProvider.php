@@ -30,15 +30,21 @@ class ThemesServiceProvider extends PackageServiceProvider
 	{
 		parent::boot();
 
+		// Set the default theme from configuration or fallback to 'default'
+		theme()->set(config('theme.default', 'default'));
+
+		// Configure view paths and Blade directives
 		View::prependLocation(theme()->viewsPath());
 		Blade::directive('themeName', fn() => "<?php echo theme()->name(); ?>");
 
+		// Configure Vite to use the current theme's build directory and hot file
 		view()->composer('*', function ()
 		{
 			Vite::useBuildDirectory("themes/" . theme()->name());
 			Vite::useHotFile("." . theme()->name() . ".hot");
 		});
 
+		// Define Vite macros for theme assets
 		Vite::macro('image', fn(string $file) => $this->asset("resources/themes/" . theme()->name() . "/images/{$file}"));
 	}
 
@@ -56,6 +62,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 		 * More info: https://github.com/spatie/laravel-package-tools
 		 */
 		$package->name('themes')
+			->hasConfigFile()
 			->hasCommands([
 				ThemeAddCommand::class,
 				ThemeRemoveCommand::class,

@@ -25,6 +25,10 @@ You can install the package via composer:
 composer require rdcstarr/laravel-themes
 ```
 
+You can publish the configuration file with:
+```bash
+php artisan vendor:publish --tag=theme-config
+```
 ## Usage
 
 ### Artisan Commands
@@ -52,6 +56,9 @@ composer require rdcstarr/laravel-themes
 - **Get the current theme instance:**
   ```php
   theme()
+
+  // Or you can use facade
+  \Rdcstarr\Themes\Facades\Theme::name();
   ```
 - **Set the current theme:**
   ```php
@@ -63,15 +70,15 @@ composer require rdcstarr/laravel-themes
   ```
 - **Get paths for theme assets:**
   ```php
-  theme()->basePath(); // all themes
-  theme()->path(); // current theme
-  theme()->viewsPath(); // views in current theme
-  theme()->jsPath(); // theme JS
-  theme()->cssPath(); // theme CSS
-  theme()->viteJs(); // Vite JS entry
-  theme()->viteCss(); // Vite CSS entry
-  theme()->viteImages(); // images directory
-  theme()->getAll(); // all available themes
+  theme()->basePath();           // all themes
+  theme()->path();               // current theme
+  theme()->viewsPath();          // views in current theme
+  theme()->jsPath();             // theme JS
+  theme()->cssPath();            // theme CSS
+  theme()->viteJs();             // Vite JS entry
+  theme()->viteCss();            // Vite CSS entry
+  theme()->viteImages();         // images directory
+  theme()->getAll();             // all available themes
   theme()->exists('theme-name'); // check if theme exists
   ```
 
@@ -83,7 +90,7 @@ composer require rdcstarr/laravel-themes
   ```
 
 - **Include Vite assets for the current theme:**
-  ```blade
+  ```php
   @vite(theme()->viteCss())
   @vite(theme()->viteJs())
   ```
