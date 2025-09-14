@@ -31,7 +31,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 		parent::boot();
 
 		// Set the default theme from configuration or fallback to 'default'
-		theme()->set(config('theme.default', 'default'));
+		theme()->set(config('themes.default', 'default'));
 
 		// Configure view paths and Blade directives
 		View::prependLocation(theme()->viewsPath());
