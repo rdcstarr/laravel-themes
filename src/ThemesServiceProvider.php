@@ -20,7 +20,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 	{
 		parent::register();
 
-		$this->app->singleton('theme', fn($app) => new Theme());
+		$this->app->singleton('theme', Theme::class);
 	}
 
 	/**
