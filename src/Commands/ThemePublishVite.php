@@ -50,8 +50,10 @@ class ThemePublishVite extends Command
 				name: 'vite.config.js'
 			);
 
-			return self::SUCCESS;
+			$this->components->success("Vite config file published successfully!");
+			$this->line("  Path: [" . Str::replaceFirst(base_path() . '/', '', base_path('vite.config.js')) . "]");
 
+			return self::SUCCESS;
 		}
 		catch (Exception $e)
 		{
