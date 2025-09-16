@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Rdcstarr\Themes\Commands\ThemeAddCommand;
 use Rdcstarr\Themes\Commands\ThemeListCommand;
+use Rdcstarr\Themes\Commands\ThemePublishVite;
 use Rdcstarr\Themes\Commands\ThemeRemoveCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -68,8 +69,9 @@ class ThemesServiceProvider extends PackageServiceProvider
 			->hasConfigFile()
 			->hasCommands([
 				ThemeAddCommand::class,
-				ThemeRemoveCommand::class,
 				ThemeListCommand::class,
+				ThemePublishVite::class,
+				ThemeRemoveCommand::class,
 			]);
 	}
 }
