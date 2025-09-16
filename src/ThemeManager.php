@@ -43,117 +43,90 @@ class ThemeManager
 	 *
 	 * @return string
 	 */
-	public function basePath(bool $relative = false): string
+	public function basePath(): string
 	{
-		$path = resource_path('themes');
-
-		return $relative ? $this->relativePath($path) : $path;
+		return resource_path('themes');
 	}
 
 	/**
-	 * Get the path for a specific theme or the current theme if no name is provided.
+	 * Get the path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function path(?string $themeName = null, bool $relative = false): string
+	public function path(): string
 	{
-		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}");
-
-		return $relative ? $this->relativePath($path) : $path;
+		return resource_path("themes/{$this->name}");
 	}
 
 	/**
-	 * Get the views path for a specific theme or the current theme if no name is provided.
+	 * Get the views path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viewsPath(?string $themeName = null, bool $relative = false): string
+	public function viewsPath(): string
 	{
-		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/views");
-
-		return $relative ? $this->relativePath($path) : $path;
+		return resource_path("themes/{$this->name}/views");
 	}
 
 	/**
-	 * Get the JavaScript file path for a specific theme or the current theme if no name is provided.
+	 * Get the JavaScript file path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function jsPath(?string $themeName = null, bool $relative = false): string
+	public function jsPath(): string
 	{
-		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/js/app.js");
-
-		return $relative ? $this->relativePath($path) : $path;
+		return resource_path("themes/{$this->name}/js/app.js");
 	}
 
 	/**
-	 * Get the CSS file path for a specific theme or the current theme if no name is provided.
+	 * Get the CSS file path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function cssPath(?string $themeName = null, bool $relative = false): string
+	public function cssPath(): string
 	{
-		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/css/app.css");
-
-		return $relative ? $this->relativePath($path) : $path;
+		return resource_path("themes/{$this->name}/css/app.css");
 	}
 
 	/**
-	 * Get the Vite JavaScript entry path for a specific theme or the current theme if no name is provided.
+	 * Get the Vite JavaScript entry path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteJs(?string $themeName = null): string
+	public function viteJs(): string
 	{
-		$themeName ??= $this->name;
-
-		return "themes/{$themeName}/js/app.js";
+		return "resources/themes/{$this->name}/js/app.js";
 	}
 
 	/**
-	 * Get the Vite CSS entry path for a specific theme or the current theme if no name is provided.
+	 * Get the Vite CSS entry path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteCss(?string $themeName = null): string
+	public function viteCss(): string
 	{
-		$themeName ??= $this->name;
-
-		return "themes/{$themeName}/css/app.css";
+		return "resources/themes/{$this->name}/css/app.css";
 	}
 
 	/**
-	 * Get the Vite images directory path for a specific theme or the current theme if no name is provided.
+	 * Get the Vite images directory path for the current theme.
 	 *
-	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteImages(?string $themeName = null): string
+	public function viteImages(): string
 	{
-		$themeName ??= $this->name;
-
-		return "themes/{$themeName}/images";
+		return "resources/themes/{$this->name}/images";
 	}
 
 	/**
 	 * Check if a theme exists by name.
-	 * Uses Redis caching in production for performance when Redis is available.
 	 *
-	 * @param string $name The name of the theme to check
+	 * @param string $name
 	 * @return bool
 	 */
 	public function exists(string $name): bool
 	{
+		$path = resource_path("themes/{$name}");
 
 		// Use Redis cache only if Redis is the cache driver
 		if (app()->environment('production') && !app()->runningInConsole() && Cache::getStore() instanceof RedisStore)
@@ -167,17 +140,17 @@ class ThemeManager
 
 			$cacheKey = "theme:exists:{$name}";
 
-			return $memo[$name] ??= Cache::remember($cacheKey, 30, fn() => File::isDirectory($this->path($name)));
+			return $memo[$name] ??= Cache::remember($cacheKey, 30, fn() => File::isDirectory($path));
 		}
 
 		// Fallback to direct file check
-		return File::isDirectory($this->path($name));
+		return File::isDirectory($path);
 	}
 
 	/**
-	 * Get all available theme names from the themes directory.
+	 * Get all available theme names.
 	 *
-	 * @return array Array of theme names
+	 * @return array
 	 */
 	public function getAll(): array
 	{
@@ -185,10 +158,5 @@ class ThemeManager
 			->map(fn($path) => basename($path))
 			->values()
 			->toArray();
-	}
-
-	protected function relativePath(string $path): string
-	{
-		return ltrim(str_replace(base_path(), '', $path), '/');
 	}
 }
