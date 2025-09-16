@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Rdcstarr\Themes\Internal\Helpers;
 use function Laravel\Prompts\confirm;
 
 class ThemePublishVite extends Command
@@ -44,10 +45,15 @@ class ThemePublishVite extends Command
 		try
 		{
 			// Publish vite.config.js from stub
-			$this->publishStub(
+			Helpers::publishStub(
 				from: "$stubsPath/vite.config.js.stub",
 				to: base_path(),
-				name: 'vite.config.js'
+				name: 'vite.config.js',
+				replacements: [
+					'resources_relative_path' => "resources/" . config("themes.directories.resources", "themes"),
+					'build_relative_path'     => config("themes.directories.build", "themes"),
+					'hot_file'                => '.${theme}.hot',
+				]
 			);
 
 			$this->components->success("Vite config file published successfully!");
@@ -59,44 +65,6 @@ class ThemePublishVite extends Command
 		{
 			$this->components->error("Failed to publish vite.config.js: " . $e->getMessage());
 			return self::FAILURE;
-		}
-	}
-
-	/**
-	 * Publishes a stub file to the specified location, replacing placeholders with provided values.
-	 *
-	 * This method reads the contents of a stub file, replaces all placeholders in the format {{ key }}
-	 * with their corresponding values from the $replacements array, and writes the result to the target path.
-	 * If an error occurs during reading or writing, it logs the error and returns false.
-	 *
-	 * @param string $from         Path to the source stub file.
-	 * @param string $to           Directory where the file should be published.
-	 * @param string $name         Name of the file to create.
-	 * @param array  $replacements Key-value pairs for placeholder replacement.
-	 * @return bool                True on success, false on failure.
-	 */
-	protected function publishStub(string $from, string $to, string $name, array $replacements = []): bool
-	{
-		$path = "$to/$name";
-
-		try
-		{
-			$content = File::get($from);
-
-			collect($replacements)->each(function ($replace, $search) use (&$content)
-			{
-				$content = Str::replace("{{ $search }}", $replace, $content);
-			});
-
-			File::put($path, $content);
-
-			return true;
-		}
-		catch (Exception $e)
-		{
-			$this->components->error("Failed to publish stub '{$path}': " . $e->getMessage());
-			return false;
-
 		}
 	}
 }

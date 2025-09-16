@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Rdcstarr\Themes\Commands\ThemeAddCommand;
+use Rdcstarr\Themes\Commands\ThemeInstallCommand;
 use Rdcstarr\Themes\Commands\ThemeListCommand;
+use Rdcstarr\Themes\Commands\ThemeManifestCommand;
+use Rdcstarr\Themes\Commands\ThemeManifestPublishCommand;
 use Rdcstarr\Themes\Commands\ThemePublishVite;
 use Rdcstarr\Themes\Commands\ThemeRemoveCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -22,6 +25,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 		parent::register();
 
 		$this->app->singleton('theme', ThemeManager::class);
+		$this->app->singleton('viteInline', ViteInline::class);
 	}
 
 	/**
@@ -31,21 +35,54 @@ class ThemesServiceProvider extends PackageServiceProvider
 	{
 		parent::boot();
 
-		// Set the default theme from configuration if specified
+		$this->setDefaultTheme();
+		$this->configureViews();
+		$this->configureBladeDirectives();
+		$this->configureVite();
+	}
+
+	/**
+	 * Set the default theme from configuration if specified.
+	 */
+	protected function setDefaultTheme(): void
+	{
 		if (config()->has('themes.default'))
 		{
 			theme()->set(config('themes.default', 'default'));
 		}
+	}
 
-		// Configure view paths and Blade directives
+	/**
+	 * Configure view paths for the current theme.
+	 */
+	protected function configureViews(): void
+	{
 		View::prependLocation(theme()->viewsPath());
-		Blade::directive('themeName', fn() => "<?php echo theme()->name(); ?>");
+	}
 
+	/**
+	 * Configure Blade directives for themes.
+	 */
+	protected function configureBladeDirectives(): void
+	{
+		Blade::directive('themeName', fn() => "<?php echo theme()->name(); ?>");
+		Blade::directive('viteInline', fn($expression) => "<?php echo viteInline()->render({$expression}); ?>");
+		Blade::directive('viteCssInline', fn() => "<?php echo viteInline()->render([theme()->viteCss()]); ?>");
+		Blade::directive('viteJsInline', fn() => "<?php echo viteInline()->render([theme()->viteJs()]); ?>");
+		Blade::directive('viteCss', fn() => "<?php echo app('Illuminate\Foundation\Vite')(theme()->viteCss()); ?>");
+		Blade::directive('viteJs', fn() => "<?php echo app('Illuminate\Foundation\Vite')(theme()->viteJs()); ?>");
+	}
+
+	/**
+	 * Configure Vite for theme support.
+	 */
+	protected function configureVite(): void
+	{
 		// Configure Vite to use the current theme's build directory and hot file
 		view()->composer('*', function ()
 		{
-			Vite::useBuildDirectory("themes/" . theme()->name());
-			Vite::useHotFile("." . theme()->name() . ".hot");
+			Vite::useBuildDirectory(theme()->getBuildDirectoryPath());
+			Vite::useHotFile(theme()->getHotFile());
 		});
 
 		// Define Vite macros for theme assets
@@ -69,7 +106,10 @@ class ThemesServiceProvider extends PackageServiceProvider
 			->hasConfigFile()
 			->hasCommands([
 				ThemeAddCommand::class,
+				ThemeInstallCommand::class,
 				ThemeListCommand::class,
+				ThemeManifestCommand::class,
+				ThemeManifestPublishCommand::class,
 				ThemePublishVite::class,
 				ThemeRemoveCommand::class,
 			]);

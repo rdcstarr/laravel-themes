@@ -12,7 +12,7 @@ const origin = `${domain}:${port}`;
 const theme = process.env.npm_config_theme || 'default';
 
 // Check if the theme exists
-const themeDir = path.resolve(__dirname, `resources/themes/${theme}`);
+const themeDir = path.resolve(__dirname, `{{ resources_relative_path }}/${theme}`);
 
 if (!fs.existsSync(themeDir)) {
 	const message = `Error: The theme '${theme}' does not exist!`;
@@ -31,8 +31,8 @@ const refreshPaths = [
 	"app/Livewire/**",
 	"app/View/Components/**",
 	"lang/**",
-	`resources/themes/${theme}/views/**`,
-	`resources/themes/${theme}/lang/**`,
+	`{{ resources_relative_path }}/${theme}/views/**`,
+	`{{ resources_relative_path }}/${theme}/lang/**`,
 	"routes/**"
 ].filter((path2) => fs.existsSync(path2.replace(/\*\*$/, "")));
 
@@ -40,16 +40,17 @@ export default defineConfig({
 	plugins: [
 		laravel({
 			input: [
-				`resources/themes/${theme}/css/app.css`,
-				`resources/themes/${theme}/js/app.js`
+				`{{ resources_relative_path }}/${theme}/css/app.css`,
+				`{{ resources_relative_path }}/${theme}/js/app.js`
 			],
 			refresh: [{
 				paths: refreshPaths
 			}],
-			buildDirectory: `themes/${theme}`,
-			hotFile: `public/.${theme}.hot`
+			buildDirectory: `{{ build_relative_path }}/${theme}`,
+			hotFile: `public/{{ hot_file }}`
 		})
 	],
+	// These configurations should be modified according to your own setup
 	server: {
 		host: true,
 		port: port,

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Rdcstarr\Themes\Internal\Helpers;
 
 class ThemeAddCommand extends Command
 {
@@ -14,7 +15,10 @@ class ThemeAddCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'theme:add {name : The name of the theme}';
+	protected $signature = 'theme:add
+		{name : The name of the theme}
+		{--manifest : Set this to create a manifest.json file}
+	';
 
 	/**
 	 * The console command description.
@@ -29,6 +33,7 @@ class ThemeAddCommand extends Command
 	public function handle()
 	{
 		$name      = $this->argument('name');
+		$manifest  = $this->option('manifest');
 		$themePath = theme()->basePath() . '/' . $name;
 		$stubsPath = __DIR__ . '/../../stubs';
 
@@ -58,7 +63,7 @@ class ThemeAddCommand extends Command
 			collect($directories)->each(fn($dir) => File::ensureDirectoryExists($dir));
 
 			// Generate app.css from stub
-			$this->publishStub(
+			Helpers::publishStub(
 				from: "$stubsPath/app.css.stub",
 				to: "$themePath/css",
 				name: 'app.css',
@@ -69,7 +74,7 @@ class ThemeAddCommand extends Command
 			);
 
 			// Generate app.js from stub
-			$this->publishStub(
+			Helpers::publishStub(
 				from: "$stubsPath/app.js.stub",
 				to: "$themePath/js",
 				name: 'app.js',
@@ -79,9 +84,9 @@ class ThemeAddCommand extends Command
 				]
 			);
 
-			// Generate wellcome.blade.php from stub
-			$this->publishStub(
-				from: "$stubsPath/wellcome.blade.php.stub",
+			// Generate welcome.blade.php from stub
+			Helpers::publishStub(
+				from: "$stubsPath/welcome.blade.php.stub",
 				to: "$themePath/views",
 				name: 'welcome.blade.php',
 				replacements: [
@@ -89,8 +94,22 @@ class ThemeAddCommand extends Command
 				]
 			);
 
+			// Generate welcome.blade.php from stub
+			if (!empty($manifest))
+			{
+				Helpers::publishStub(
+					from: "$stubsPath/manifest.json.stub",
+					to: $themePath,
+					name: 'manifest.json',
+					replacements: [
+						'name'       => Str::ucfirst($name),
+						'created_at' => $currentDate,
+					]
+				);
+			}
+
 			$this->components->success("Theme '{$name}' has been created successfully!");
-			$this->line("  Path: [" . Str::replaceFirst(base_path() . '/', '', $themePath) . "]");
+			$this->line("  🎨 Path: [./" . Str::replaceFirst(base_path() . '/', '', $themePath) . "]");
 
 			return self::SUCCESS;
 
@@ -106,44 +125,6 @@ class ThemeAddCommand extends Command
 			}
 
 			return self::FAILURE;
-		}
-	}
-
-	/**
-	 * Publishes a stub file to the specified location, replacing placeholders with provided values.
-	 *
-	 * This method reads the contents of a stub file, replaces all placeholders in the format {{ key }}
-	 * with their corresponding values from the $replacements array, and writes the result to the target path.
-	 * If an error occurs during reading or writing, it logs the error and returns false.
-	 *
-	 * @param string $from         Path to the source stub file.
-	 * @param string $to           Directory where the file should be published.
-	 * @param string $name         Name of the file to create.
-	 * @param array  $replacements Key-value pairs for placeholder replacement.
-	 * @return bool                True on success, false on failure.
-	 */
-	protected function publishStub(string $from, string $to, string $name, array $replacements = []): bool
-	{
-		$path = "$to/$name";
-
-		try
-		{
-			$content = File::get($from);
-
-			collect($replacements)->each(function ($replace, $search) use (&$content)
-			{
-				$content = Str::replace("{{ $search }}", $replace, $content);
-			});
-
-			File::put($path, $content);
-
-			return true;
-		}
-		catch (Exception $e)
-		{
-			$this->components->error("Failed to publish stub '{$path}': " . $e->getMessage());
-			return false;
-
 		}
 	}
 }

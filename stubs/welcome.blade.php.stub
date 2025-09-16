@@ -8,21 +8,24 @@
 
 	<title>{{ config('app.name', 'Laravel') }}</title>
 
+	{{-- Styles for the current theme --}}
+	{{-- @viteCss --}}
+	@viteCssInline
+
 	{{-- Stack styles --}}
 	@stack('styles')
 
-	{{-- Styles for the current theme --}}
-	@vite(theme()->viteCss())
 </head>
 
 <body class="theme">
 	<h1>Welcome to the {{ name }} theme</h1>
 
+	{{-- Scripts for the current theme --}}
+	{{-- @viteJs --}}
+	@viteJsInline
+
 	{{-- Stack scripts --}}
 	@stack('scripts')
-
-	{{-- Scripts for the current theme --}}
-	@vite(theme()->viteJs())
 </body>
 
 </html>
