@@ -20,7 +20,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 	{
 		parent::register();
 
-		$this->app->singleton('theme', Theme::class);
+		$this->app->singleton('theme', ThemeManager::class);
 	}
 
 	/**
@@ -30,8 +30,11 @@ class ThemesServiceProvider extends PackageServiceProvider
 	{
 		parent::boot();
 
-		// Set the default theme from configuration or fallback to 'default'
-		theme()->set(config('themes.default', 'default'));
+		// Set the default theme from configuration if specified
+		if (config()->has('themes.default'))
+		{
+			theme()->set(config('themes.default', 'default'));
+		}
 
 		// Configure view paths and Blade directives
 		View::prependLocation(theme()->viewsPath());
@@ -45,7 +48,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 		});
 
 		// Define Vite macros for theme assets
-		Vite::macro('image', fn(string $file) => $this->asset("resources/themes/" . theme()->name() . "/images/{$file}"));
+		Vite::macro('image', fn(string $file) => $this->asset(theme()->viteImages(relative: true) . "/{$file}"));
 	}
 
 	/**
