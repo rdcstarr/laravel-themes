@@ -45,7 +45,9 @@ class ThemeManager
 	 */
 	public function basePath(bool $relative = false): string
 	{
-		return $relative ? $this->relativePath(resource_path('themes')) : resource_path('themes');
+		$path = resource_path('themes');
+
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -57,8 +59,9 @@ class ThemeManager
 	public function path(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}");
 
-		return $relative ? $this->relativePath(resource_path("themes/{$themeName}")) : resource_path("themes/{$themeName}");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -70,8 +73,9 @@ class ThemeManager
 	public function viewsPath(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/views");
 
-		return $relative ? $this->relativePath(resource_path("themes/{$themeName}/views")) : resource_path("themes/{$themeName}/views");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -83,8 +87,9 @@ class ThemeManager
 	public function jsPath(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/js/app.js");
 
-		return $relative ? $this->relativePath(resource_path("themes/{$themeName}/js/app.js")) : resource_path("themes/{$themeName}/js/app.js");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -96,8 +101,9 @@ class ThemeManager
 	public function cssPath(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/css/app.css");
 
-		return $relative ? $this->relativePath(resource_path("themes/{$themeName}/css/app.css")) : resource_path("themes/{$themeName}/css/app.css");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -109,8 +115,9 @@ class ThemeManager
 	public function viteJs(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/js/app.js");
 
-		return $relative ? $this->relativePath("resources/themes/{$themeName}/js/app.js") : resource_path("themes/{$themeName}/js/app.js");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -122,8 +129,9 @@ class ThemeManager
 	public function viteCss(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/css/app.css");
 
-		return $relative ? $this->relativePath("resources/themes/{$themeName}/css/app.css") : resource_path("themes/{$themeName}/css/app.css");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -135,8 +143,9 @@ class ThemeManager
 	public function viteImages(?string $themeName = null, bool $relative = false): string
 	{
 		$themeName ??= $this->name;
+		$path      = resource_path("themes/{$themeName}/images");
 
-		return $relative ? $this->relativePath("resources/themes/{$themeName}/images") : resource_path("themes/{$themeName}/images");
+		return $relative ? $this->relativePath($path) : $path;
 	}
 
 	/**
@@ -148,6 +157,7 @@ class ThemeManager
 	 */
 	public function exists(string $name): bool
 	{
+
 		// Use Redis cache only if Redis is the cache driver
 		if (app()->environment('production') && !app()->runningInConsole() && Cache::getStore() instanceof RedisStore)
 		{
