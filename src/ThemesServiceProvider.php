@@ -49,7 +49,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 		});
 
 		// Define Vite macros for theme assets
-		Vite::macro('image', fn(string $file) => $this->asset(theme()->viteImages(relative: true) . "/{$file}"));
+		Vite::macro('image', fn(string $file) => $this->asset(theme()->viteImages() . "/{$file}"));
 	}
 
 	/**

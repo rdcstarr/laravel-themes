@@ -112,12 +112,11 @@ class ThemeManager
 	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteJs(?string $themeName = null, bool $relative = false): string
+	public function viteJs(?string $themeName = null): string
 	{
 		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/js/app.js");
 
-		return $relative ? $this->relativePath($path) : $path;
+		return "themes/{$themeName}/js/app.js";
 	}
 
 	/**
@@ -126,12 +125,11 @@ class ThemeManager
 	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteCss(?string $themeName = null, bool $relative = false): string
+	public function viteCss(?string $themeName = null): string
 	{
 		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/css/app.css");
 
-		return $relative ? $this->relativePath($path) : $path;
+		return "themes/{$themeName}/css/app.css";
 	}
 
 	/**
@@ -140,12 +138,11 @@ class ThemeManager
 	 * @param string|null $themeName The name of the theme (optional, defaults to current theme)
 	 * @return string
 	 */
-	public function viteImages(?string $themeName = null, bool $relative = false): string
+	public function viteImages(?string $themeName = null): string
 	{
 		$themeName ??= $this->name;
-		$path      = resource_path("themes/{$themeName}/images");
 
-		return $relative ? $this->relativePath($path) : $path;
+		return "themes/{$themeName}/images";
 	}
 
 	/**
