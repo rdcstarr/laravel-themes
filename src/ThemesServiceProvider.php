@@ -12,6 +12,7 @@ use Rdcstarr\Themes\Commands\ThemeManifestCommand;
 use Rdcstarr\Themes\Commands\ThemeManifestPublishCommand;
 use Rdcstarr\Themes\Commands\ThemePublishVite;
 use Rdcstarr\Themes\Commands\ThemeRemoveCommand;
+use Rdcstarr\Themes\Commands\ThemeViewCacheCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -57,7 +58,11 @@ class ThemesServiceProvider extends PackageServiceProvider
 	 */
 	protected function configureViews(): void
 	{
-		View::prependLocation(theme()->viewsPath());
+		$viewsPath = theme()->viewsPath();
+		if (is_dir($viewsPath))
+		{
+			View::prependLocation($viewsPath);
+		}
 	}
 
 	/**
@@ -112,6 +117,7 @@ class ThemesServiceProvider extends PackageServiceProvider
 				ThemeManifestPublishCommand::class,
 				ThemePublishVite::class,
 				ThemeRemoveCommand::class,
+				ThemeViewCacheCommand::class,
 			]);
 	}
 }
