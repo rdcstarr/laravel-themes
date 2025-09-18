@@ -2,9 +2,9 @@
 
 namespace Rdcstarr\Themes;
 
-use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Rdcstarr\Themes\Commands\ThemeAddCommand;
 use Rdcstarr\Themes\Commands\ThemeInstallCommand;
 use Rdcstarr\Themes\Commands\ThemeListCommand;
@@ -18,6 +18,33 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class ThemesServiceProvider extends PackageServiceProvider
 {
+	/**
+	 * Configure the package using Laravel Package Tools.
+	 *
+	 * @param Package $package
+	 * @return void
+	 */
+	public function configurePackage(Package $package): void
+	{
+		/*
+		 * This class is a Package Service Provider
+		 *
+		 * More info: https://github.com/spatie/laravel-package-tools
+		 */
+		$package->name('themes')
+			->hasConfigFile()
+			->hasCommands([
+				ThemeAddCommand::class,
+				ThemeInstallCommand::class,
+				ThemeListCommand::class,
+				ThemeManifestCommand::class,
+				ThemeManifestPublishCommand::class,
+				ThemePublishVite::class,
+				ThemeRemoveCommand::class,
+				ThemeViewCacheCommand::class,
+			]);
+	}
+
 	/**
 	 * Register services and bind the theme singleton in the service container.
 	 */
@@ -92,32 +119,5 @@ class ThemesServiceProvider extends PackageServiceProvider
 
 		// Define Vite macros for theme assets
 		Vite::macro('image', fn(string $file) => $this->asset(theme()->viteImages() . "/{$file}"));
-	}
-
-	/**
-	 * Configure the package using Laravel Package Tools.
-	 *
-	 * @param Package $package
-	 * @return void
-	 */
-	public function configurePackage(Package $package): void
-	{
-		/*
-		 * This class is a Package Service Provider
-		 *
-		 * More info: https://github.com/spatie/laravel-package-tools
-		 */
-		$package->name('themes')
-			->hasConfigFile()
-			->hasCommands([
-				ThemeAddCommand::class,
-				ThemeInstallCommand::class,
-				ThemeListCommand::class,
-				ThemeManifestCommand::class,
-				ThemeManifestPublishCommand::class,
-				ThemePublishVite::class,
-				ThemeRemoveCommand::class,
-				ThemeViewCacheCommand::class,
-			]);
 	}
 }
