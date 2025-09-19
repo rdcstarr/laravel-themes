@@ -17,6 +17,7 @@ class ThemeAddCommand extends Command
 	 */
 	protected $signature = 'theme:add
 		{name : The name of the theme}
+		{--tailwind : Set this to create a Tailwind CSS setup}
 		{--manifest : Set this to create a manifest.json file}
 	';
 
@@ -34,6 +35,7 @@ class ThemeAddCommand extends Command
 	{
 		$name      = $this->argument('name');
 		$manifest  = $this->option('manifest');
+		$tailwind  = $this->option('tailwind');
 		$themePath = theme()->basePath() . '/' . $name;
 		$stubsPath = __DIR__ . '/../../stubs';
 
@@ -64,7 +66,7 @@ class ThemeAddCommand extends Command
 
 			// Generate app.css from stub
 			Helpers::publishStub(
-				from: "$stubsPath/app.css.stub",
+				from: $stubsPath . ($tailwind ? "/app.css.tailwindcss.stub" : "/app.css.stub"),
 				to: "$themePath/css",
 				name: 'app.css',
 				replacements: [

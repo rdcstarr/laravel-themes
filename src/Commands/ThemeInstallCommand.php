@@ -16,6 +16,7 @@ class ThemeInstallCommand extends Command
 	 * @var string
 	 */
 	protected $signature = 'theme:install
+		{--tailwind : Set this to create a Tailwind CSS setup}
 		{--manifest : Set this to create a manifest.json file}
 		{--force : If set, will overwrite existing files without prompting}
 	';
@@ -93,6 +94,7 @@ class ThemeInstallCommand extends Command
 		Artisan::call('theme:add', [
 			'name'       => $this->themeName,
 			'--manifest' => $this->option('manifest'),
+			'--tailwind' => $this->option('tailwind'),
 		]);
 	}
 

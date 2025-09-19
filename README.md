@@ -52,13 +52,13 @@ composer require rdcstarr/laravel-themes
 
 🚀 **Install Theme Package** (required first):
 ```bash
-php artisan theme:install [--force]
+php artisan theme:install [--force] [--manifest] [--tailwind]
 ```
 Sets up the default theme and publishes Vite configuration files.
 
 🎨 **Add a New Theme**:
 ```bash
-php artisan theme:add {theme-name} [--manifest]
+php artisan theme:add {theme-name} [--manifest] [--tailwind]
 ```
 Creates a complete theme structure with CSS, JS, views, and images directories. Use `--manifest` to also create a manifest.json file.
 

@@ -1,0 +1,13 @@
+/**
+ * ============================
+ * 🎨 Theme:   {{ name }}
+ * 🗓️ Created: {{ created_at }}
+ * ============================
+ */
+
+@import 'tailwindcss';
+@source '../views';
+
+@theme {
+	--font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
